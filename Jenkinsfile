@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        gradle 'Gradle-8.9-rc-1'
+        gradle 'Gradle 8.5'
     }
     environment {
         VERSION_NUMBER = '1.0'
