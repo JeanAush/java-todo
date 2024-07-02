@@ -1,15 +1,11 @@
 pipeline {
     agent any
-
     tools {
         gradle 'Gradle-6'
     }
-
-
     environment {
         VERSION_NUMBER = '1.0'
     }
-
     stages {
         stage('Clone repository') {
             steps {
@@ -20,17 +16,22 @@ pipeline {
         stage('Build ') {
             steps {
                 echo "Build number ${BUILD_NUMBER}"
-                // withGradle() {
-                    sh 'gradle build'
-                // }
+                sh 'gradle build'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing the project'
-                // withGradle() {
-                    sh 'gradle test'
-                // }
+                sh 'gradle test'
+            }
+        }
+        stage('Deploy to Heroku') {
+            steps {
+                withCredentials([string(credentialsId: 'HEROKU_API_KEY', variable: 'HEROKU_API_KEY')]) {
+                    sh '''
+                        git push https://heroku:$HEROKU_API_KEY@git.heroku.com/jeans_heroku.git HEAD:main
+                    '''
+                }
             }
         }
     }
